@@ -16,6 +16,8 @@ app = Dash(
     update_title="🍷🍷...",
 )
 
+server = app.server
+
 app.layout = dbc.Container(
     [
         html.H1(
