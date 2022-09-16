@@ -69,7 +69,6 @@ def download_smallest_dataset(n_clicks):
 @callback(
     Output("medium_dataset", "href"),
     Input("medium_dataset", "n_clicks"),
-    prevent_initial_call=True,
 )
 def medium_return(n_clicks):
     return (
@@ -80,7 +79,6 @@ def medium_return(n_clicks):
 @callback(
     Output("largest_dataset", "href"),
     Input("largest_dataset", "n_clicks"),
-    prevent_initial_call=True,
 )
 def large_return(n_clicks):
     return (
