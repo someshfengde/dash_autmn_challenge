@@ -29,16 +29,17 @@ def make_sidebar_category(category="/", title=""):
         elif page["name"] == "Notes":
             page_name = f"📕 {page['name']}"
         else:
-            page_name = page['name']
-        nav_items.append(html.Div(
-                    dbc.NavLink(
-                        page_name,
-                        href=page["relative_path"],
-                        active="exact",
-                    )
-                ))
+            page_name = page["name"]
+        nav_items.append(
+            html.Div(
+                dbc.NavLink(
+                    page_name,
+                    href=page["relative_path"],
+                    active="exact",
+                )
+            )
+        )
 
-                
     return dbc.AccordionItem(
         dbc.Nav(
             nav_items,

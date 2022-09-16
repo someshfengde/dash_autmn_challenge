@@ -8,23 +8,29 @@ from pages.nav import make_side_nav
 
 dbc_css = "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.min.css"
 
-app = Dash(__name__, use_pages=True, external_stylesheets=[dbc.themes.SKETCHY, dbc_css])
+app = Dash(
+    __name__,
+    use_pages=True,
+    external_stylesheets=[dbc.themes.SKETCHY, dbc_css],
+    title="Iowa liquor sales",
+    update_title="🍷🍷...",
+)
 
 app.layout = dbc.Container(
-        [
-            html.H1(
-                "🍷 Iowa Liquor Sales 🍷",
-                className="bg-primary text-white p-2 mb-2 text-center",
-            ),
-            dbc.Row(
-                [
-                    dbc.Col(make_side_nav(), xs=4, md=3, xl=2, id="sidebar"),
-                    dbc.Col(dash.page_container),
-                ]
-            ),
-        ],
-        fluid=True,
-    )
+    [
+        html.H1(
+            "🍷 Iowa Liquor Sales 🍷",
+            className="bg-primary text-white p-2 mb-2 text-center",
+        ),
+        dbc.Row(
+            [
+                dbc.Col(make_side_nav(), xs=4, md=3, xl=2, id="sidebar"),
+                dbc.Col(dash.page_container),
+            ]
+        ),
+    ],
+    fluid=True,
+)
 
 if __name__ == "__main__":
     app.run_server(debug=True)
