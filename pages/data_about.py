@@ -31,9 +31,9 @@ layout = dbc.Container(
         html.H2("Click following buttons for downloading dataset"),
         dcc.Markdown("this dashboard is developed with `50k` Records dataset"),
         html.Div([
-            dbc.Button("50k Records", color="primary", id = "smallest_dataset"), 
-            dbc.Button("1.2M Records", color="primary", id = "medium_dataset"),
-            dbc.Button("12M Records", color="primary", id = "largest_dataset")
+            dbc.Button("50k Records", color="primary", id = "smallest_dataset", target = "_blank"), 
+            dbc.Button("1.2M Records", color="primary", id = "medium_dataset", target = "_blank"),
+            dbc.Button("12M Records", color="primary", id = "largest_dataset", target = "_blank")
         ]),
         dcc.Download(id = "send_file")
 
