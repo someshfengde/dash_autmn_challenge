@@ -11,6 +11,7 @@ theme_changer = ThemeChangerAIO(
     radio_props={"value": dbc.themes.SKETCHY},
 )
 
+
 def make_header(text, spacing="mt-4"):
     return html.H2(
         text,
@@ -19,22 +20,28 @@ def make_header(text, spacing="mt-4"):
 
 
 def make_sidebar_category(category="/", title=""):
-    include_home = category == "/theme-explorer"
+    nav_items = []
+    for page in dash.page_registry.values():
+        if page["name"] == "Home":
+            page_name = f"🏠️ {page['name']}"
+        elif page["name"] == "Data about":
+            page_name = f"📊 {page['name']}"
+        elif page["name"] == "Notes":
+            page_name = f"📕 {page['name']}"
+        else:
+            page_name = page['name']
+        nav_items.append(html.Div(
+                    dbc.NavLink(
+                        page_name,
+                        href=page["relative_path"],
+                        active="exact",
+                    )
+                ))
+
+                
     return dbc.AccordionItem(
         dbc.Nav(
-            [
-                dbc.NavLink(
-                    [
-                        html.Div(page["name"]),
-                    ],
-                    href=page["path"],
-                    active="exact",
-                    className="py-2",
-                )
-                for page in dash.page_registry.values()
-                if page["path"].startswith(category)
-                or (page["path"] == "/" and include_home)
-            ],
+            nav_items,
             vertical=True,
             pills=True,
             # className="bg-light",
@@ -49,57 +56,38 @@ def make_side_nav():
             theme_changer,
             html.Hr(),
             dbc.Accordion(
-                [
-                    make_sidebar_category(
-                        category="./", title="asdfasdf Explorer"
-                    )
-                ],
+                [make_sidebar_category(category="./", title="Liquor data explorer 🔍️")],
             ),
-            dbc.Accordion(
-                [
-                    make_sidebar_category(
-                        category="/adding-themes", title="Adding Themes"
-                    )
-                ],
-            ),
+            html.Hr(),
             dbc.Accordion(
                 [
                     dbc.AccordionItem(
                         dbc.Nav(
                             [
                                 dbc.NavLink(
-                                    "Dash Bootstrap Cheatsheet",
-                                    href="cheatsheet_url",
+                                    "👨‍🎓 Resume",
+                                    href="https://drive.google.com/file/d/106-FOqLpbwAFLnWtSFWW4-EMNHunJ1NN/view?usp=sharing",
                                     target="_blank",
                                 ),
                                 dbc.NavLink(
-                                    "Dash Examples Index",
-                                    href="examples_index_url",
+                                    "🕸️ LinkedIn",
+                                    href="https://www.linkedin.com/in/somesh-9188",
                                     target="_blank",
                                 ),
                                 dbc.NavLink(
-                                    "Dash Docs", href="dash_docs_url", target="_blank"
-                                ),
-                                dbc.NavLink(
-                                    "Dash Forum", href="dash_forum_url", target="_blank"
-                                ),
-                                dbc.NavLink(
-                                    "Dash Bootstrap Components Docs",
-                                    href="dbc_components_url",
+                                    "😺 GitHub",
+                                    href="https://github.com/someshfengde",
                                     target="_blank",
                                 ),
                                 dbc.NavLink(
-                                    [
-                                        html.I(className="fa-brands fa-github me-2"),
-                                        "Dash Bootstrap Templates",
-                                    ],
-                                    href="",
+                                    "🌐 Portfolio",
+                                    href="https://somesh.gitbook.io/somesh-fengade/",
                                     target="_blank",
                                 ),
                             ],
                             vertical=True,
                         ),
-                        title="Other Sites",
+                        title="My Socials",
                     )
                 ],
             ),
