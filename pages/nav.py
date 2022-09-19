@@ -22,7 +22,7 @@ def make_header(text, spacing="mt-4"):
 def make_sidebar_category(category="/", title=""):
     nav_items = []
     for page in dash.page_registry.values():
-        if page["name"] == "Home":
+        if page["name"] == "Dashboard":
             page_name = f"🏠️ {page['name']}"
         elif page["name"] == "Data about":
             page_name = f"📊 {page['name']}"
@@ -59,7 +59,31 @@ def make_side_nav():
             dbc.Accordion(
                 [make_sidebar_category(category="./", title="Liquor data explorer 🔍️")],
             ),
-            html.Hr(),
+            html.Br(),
+            dbc.Accordion(
+                [
+                    dbc.AccordionItem(
+                        dbc.Nav(
+                            [
+                                dbc.NavLink(
+                                    "😺 GitHub repo",
+                                    href="https://github.com/someshfengde/dash_autmn_challenge",
+                                    target="_blank",
+                                ),
+                                dbc.NavLink(
+                                    "📧 Contact",
+                                    href="mailto:someshfengde@gmail.com",
+                                    target="_blank",
+                                ),
+                            ],
+                            vertical=True,
+                            pills=True,
+                        ),
+                        title="App links",
+                    ),
+                ]
+            ),
+            html.Br(), 
             dbc.Accordion(
                 [
                     dbc.AccordionItem(

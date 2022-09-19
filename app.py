@@ -13,15 +13,17 @@ app = Dash(
     use_pages=True,
     external_stylesheets=[dbc.themes.SKETCHY, dbc_css],
     title="Iowa liquor sales",
-    update_title="🍷🍷...",
+    update_title="🍷...",
+
 )
+app._favicon = "./android_fav.png"
 
 server = app.server
 
 app.layout = dbc.Container(
     [
         html.H1(
-            "🍷 Iowa Liquor Sales 🍷",
+            "🍾 Iowa Liquor Sales 🍾",
             className="bg-primary text-white p-2 mb-2 text-center",
         ),
         dbc.Row(
