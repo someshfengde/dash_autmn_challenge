@@ -125,7 +125,7 @@ def show_retail_revenue(no_counties, value, color_switch):
     # preparing data for county wise sale dollers
     county_data = data.groupby("county")["sale_dollars"].sum().reset_index()
     county_data = county_data.sort_values(by="sale_dollars", ascending=False)
-    county_revenue = px.histogram(county_data[:no_counties], "county", "sale_dollars")
+    county_revenue = go.Figure(px.histogram(county_data[:no_counties], "county", "sale_dollars", color = "county"))
     if color_switch:
         bottles_sold = px.scatter(data, "bottles_sold", value, color="county")
     else:
@@ -134,7 +134,7 @@ def show_retail_revenue(no_counties, value, color_switch):
 
 
 @callback(
-    [Output("day_week_sales", "figure")],
+    Output("day_week_sales", "figure"),
     Input("day_or_week_switch", "value")
 )
 def display_counties_sales(day_week_switch):
@@ -144,10 +144,13 @@ def display_counties_sales(day_week_switch):
         total_sales_day = data.groupby("day")["sale_dollars"].sum().reset_index()
         cats = [ 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
         final_data_total_sale = pd.DataFrame({"Day":cats, "sales":total_sales_day["sale_dollars"]})
-        fig = px.bar(final_data_total_sale, x="Day", y="sales")
+        fig = px.bar(final_data_total_sale, x="Day", y="sales",color = "Day", title="Total sales by day")
+        
     else:
         total_sales_day = pd.DataFrame(["week", "sales"])
         total_sales_day = data.groupby("week")["sale_dollars"].sum().reset_index()
         final_data_total_sale = pd.DataFrame({"week":total_sales_day["week"], "sales":total_sales_day["sale_dollars"]})
-        fig = go.Figure(px.bar(final_data_total_sale, x="week", y="sales"))
+        fig = go.Figure(px.bar(final_data_total_sale, x="week", y="sales", color = "sales"))
+        # setting y range to 50000 plus 
+        fig.update_yaxes(range=[50000,250000])
     return fig
