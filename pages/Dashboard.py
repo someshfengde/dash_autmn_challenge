@@ -5,13 +5,20 @@ import pandas as pd
 import plotly.express as px
 import dash_daq as daq
 import plotly.graph_objects as go
+from urllib.request import urlopen
+import json 
+import numpy as np 
 
 dash.register_page(__name__, path="/")
 
+
+with urlopen('https://gist.githubusercontent.com/mcwhittemore/96aaa132af24d3114643/raw/9cea5ced7476cc419621acf0505554e4b45ca459/iowa-counties.geojson') as response:
+    counties = json.load(response)
 # reading the data
 data = pd.read_csv("./data/liquor_iowa_2021.csv")
 data["day"] = data["date"].apply(lambda x: pd.to_datetime(x).day_name())
 data["week"] = data["date"].apply(lambda x: pd.to_datetime(x).week)
+df2 = pd.read_csv("./data/uscities.csv")
 
 layout = dbc.Container(
     [
@@ -96,9 +103,10 @@ layout = dbc.Container(
                     ],
                     width=6,
                 ),
-                dbc.Col(html.Div("Another div")),
+                dbc.Col(dcc.Graph(id = "map_1")),
             ]
         ),
+        dcc.Graph(id = "map_2"),
         dcc.Markdown(
             """
     ## Dataset description
@@ -154,3 +162,56 @@ def display_counties_sales(day_week_switch):
         # setting y range to 50000 plus 
         fig.update_yaxes(range=[50000,250000])
     return fig
+
+
+@callback([Output('map_1', 'figure'),
+               Output('map_2', 'figure'),
+],
+              [Input('county_color_switch','value')],
+)
+def update_graph(n_clicks):
+    dff = data#[(df['date'] >= start_date) & (df['date'] <= end_date)]
+    df9 = dff.pivot_table(values='sale_dollars',
+                         index=['county'],
+                         aggfunc=np.sum).reset_index()
+    df9 = pd.merge(df9, df2[['county', 'county_fips']], on='county', how='left')
+    df9 = df9.sort_values(['sale_dollars'], ascending=[False])
+    map_1_title_1 = df9['county'].iloc[0]
+    map_1_title_2 = df9['sale_dollars'].iloc[0]
+    map_1_title_2 = f'{map_1_title_2:,.2f}'
+    fig_7 = px.choropleth_mapbox(df9,
+                                 locations=df9["county_fips"],
+                                 geojson=counties,
+                                 featureidkey="properties.geoid",
+                                 color=df9['sale_dollars'],
+                                 hover_name="county",
+                                 range_color=(0, df9['sale_dollars'].iloc[0]),
+                                 zoom=5,
+                                 center={"lat": 42.01604, "lon": -92.91157},
+                                 mapbox_style="carto-positron",
+                                 color_continuous_scale="Viridis")
+    fig_7.update_layout(margin=dict(l=0, r=0, t=0, b=0))
+
+    df10 = dff.pivot_table(values='volume_sold_liters',
+                          index=['county'],
+                          aggfunc=np.sum).reset_index()
+    df10 = pd.merge(df10, df2[['county', 'county_fips']], on='county', how='left')
+    df10 = df10.sort_values(['volume_sold_liters'], ascending=[False])
+    map_2_title_1 = df10['county'].iloc[0]
+    map_2_title_2 = df10['volume_sold_liters'].iloc[0]
+    map_2_title_2 = f'{map_2_title_2:,.2f}'
+    fig_8 = px.choropleth_mapbox(df10,
+                                 locations=df10["county_fips"],
+                                 geojson=counties,
+                                 featureidkey="properties.geoid",
+                                 color=df10['volume_sold_liters'],
+                                 hover_name="county",
+                                 range_color=(0, df10['volume_sold_liters'].iloc[0]),
+                                 zoom=5,
+                                 center={"lat": 42.01604, "lon": -92.91157},
+                                 mapbox_style="carto-positron",
+                                 color_continuous_scale="Viridis")
+    fig_8.update_layout(margin=dict(l=0, r=0, t=0, b=0))
+
+    return fig_7,fig_8      
+        
