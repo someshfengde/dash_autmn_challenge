@@ -83,7 +83,7 @@ def make_side_nav():
                     ),
                 ]
             ),
-            html.Br(), 
+            html.Br(),
             dbc.Accordion(
                 [
                     dbc.AccordionItem(

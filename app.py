@@ -14,7 +14,6 @@ app = Dash(
     external_stylesheets=[dbc.themes.SKETCHY, dbc_css],
     title="Iowa liquor sales",
     update_title="🍷...",
-
 )
 app._favicon = "./android_fav.png"
 
@@ -38,4 +37,3 @@ app.layout = dbc.Container(
 
 if __name__ == "__main__":
     app.run_server(debug=True)
-

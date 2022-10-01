@@ -3,10 +3,9 @@ import dash
 from dash import html, dcc, Input, Output, callback, dash_table
 import dash_bootstrap_components as dbc
 import pandas as pd
+from data_prep import data, df2
 
 dash.register_page(__name__)
-
-data = pd.read_csv("data/liquor_iowa_2021.csv")
 
 table = dash_table.DataTable(
     columns=[{"name": i, "id": i, "deletable": True} for i in data.columns],
