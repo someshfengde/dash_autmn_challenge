@@ -83,6 +83,7 @@ layout = dbc.Container(
                 ),
             ]
         ),
+        html.Br(), # add a break between the graphs
         dbc.Row(
             [
                 dbc.Col(
@@ -121,6 +122,7 @@ layout = dbc.Container(
                 ),
             ]
         ),
+        html.Br(), # add a break between the graphs
         dcc.Markdown("### 🍷 Alcohol sales by county"),
         dbc.Row(
             [
@@ -142,6 +144,7 @@ layout = dbc.Container(
                 ),
             ]
         ),
+        html.Br(), # add a break between the graphs
         dcc.Markdown(
             """
     ## Dataset description

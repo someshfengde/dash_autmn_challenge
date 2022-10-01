@@ -109,6 +109,11 @@ def make_side_nav():
                                     href="https://somesh.gitbook.io/somesh-fengade/",
                                     target="_blank",
                                 ),
+                                dbc.NavLink(
+                                    "⬆️ Upwork",
+                                    href="https://www.upwork.com/freelancers/~01d21fd7991660718f",
+                                    target="_blank",
+                                ),
                             ],
                             vertical=True,
                         ),
