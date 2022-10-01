@@ -1,6 +1,7 @@
 import dash
 from dash import html, dcc, Input, Output, callback
 import dash_bootstrap_components as dbc
+from dash_bootstrap_templates import ThemeChangerAIO, template_from_url
 import pandas as pd
 import plotly.express as px
 import dash_daq as daq
@@ -165,26 +166,31 @@ layout = dbc.Container(
     Input("no_counties", "value"),
     Input("bottle_select_dropdown", "value"),
     Input("county_color_switch", "value"),
+    dash.Input(ThemeChangerAIO.ids.radio("theme"), "value"),
 )
-def show_retail_revenue(no_counties, value, color_switch):
+def show_retail_revenue(no_counties, value, color_switch, theme ):
     # top 50 counties by revenue
     # preparing data for county wise sale dollers
     county_data = data.groupby("county")["sale_dollars"].sum().reset_index()
     county_data = county_data.sort_values(by="sale_dollars", ascending=False)
     county_revenue = go.Figure(
         px.histogram(
-            county_data[:no_counties], "county", "sale_dollars", color="county"
+            county_data[:no_counties], "county", "sale_dollars", color="county",
+        template=template_from_url(theme),
         )
     )
     if color_switch:
-        bottles_sold = px.scatter(data, "bottles_sold", value, color="county")
+        bottles_sold = px.scatter(data, "bottles_sold", value, color="county",
+        template=template_from_url(theme),)
     else:
-        bottles_sold = px.scatter(data, "bottles_sold", value)
+        bottles_sold = px.scatter(data, "bottles_sold", value,
+        template=template_from_url(theme),)
     return county_revenue, bottles_sold
 
 
-@callback(Output("day_week_sales", "figure"), Input("day_or_week_switch", "value"))
-def display_counties_sales(day_week_switch):
+@callback(Output("day_week_sales", "figure"), Input("day_or_week_switch", "value"),
+dash.Input(ThemeChangerAIO.ids.radio("theme"), "value"),)
+def display_counties_sales(day_week_switch,theme ):
     if day_week_switch:
         # finding the day
         total_sales_day = pd.DataFrame(["Day", "sales"])
@@ -216,7 +222,8 @@ def display_counties_sales(day_week_switch):
             {"week": total_sales_day["week"], "sales": total_sales_day["sale_dollars"]}
         )
         fig = go.Figure(
-            px.bar(final_data_total_sale, x="week", y="sales", color="sales")
+            px.bar(final_data_total_sale, x="week", y="sales", color="sales",
+        template=template_from_url(theme),)
         )
         # setting y range to 50000 plus
         fig.update_yaxes(range=[50000, 250000])
@@ -228,9 +235,10 @@ def display_counties_sales(day_week_switch):
         Output("map_1", "figure"),
         Output("map_2", "figure"),
     ],
-    [Input("county_color_switch", "value")],
+    [Input("county_color_switch", "value"),
+    dash.Input(ThemeChangerAIO.ids.radio("theme"), "value"),],
 )
-def update_graph(n_clicks):
+def update_graph(n_clicks, theme ):
     dff = data  # [(data['date'] >= start_date) & (data['date'] <= end_date)]
     df9 = dff.pivot_table(
         values="sale_dollars", index=["county"], aggfunc=np.sum
@@ -252,6 +260,7 @@ def update_graph(n_clicks):
         center={"lat": 42.01604, "lon": -92.91157},
         mapbox_style="carto-positron",
         color_continuous_scale="Viridis",
+        template=template_from_url(theme),
     )
     fig_7.update_layout(margin=dict(l=0, r=0, t=0, b=0))
 
@@ -275,6 +284,7 @@ def update_graph(n_clicks):
         center={"lat": 42.01604, "lon": -92.91157},
         mapbox_style="carto-positron",
         color_continuous_scale="Viridis",
+        template=template_from_url(theme),
     )
     fig_8.update_layout(margin=dict(l=0, r=0, t=0, b=0))
 
@@ -283,9 +293,10 @@ def update_graph(n_clicks):
 
 @callback(
     Output("imported_liquor_graph", "figure"),
-    [Input("imported_liquor_dropdown", "value")],
+    [Input("imported_liquor_dropdown", "value"),
+    dash.Input(ThemeChangerAIO.ids.radio("theme"), "value"),],
 )
-def update_imported_liquor_graph(imported_liquor_dropdown):
+def update_imported_liquor_graph(imported_liquor_dropdown, theme):
     liquor_df = data[data["category_name"] == imported_liquor_dropdown]
     liquor_df["price_per_liter"] = liquor_df["sale_dollars"] / (
         liquor_df["bottle_volume_ml"] / 1000
@@ -297,5 +308,6 @@ def update_imported_liquor_graph(imported_liquor_dropdown):
         title="Price per liter",
         marginal="box",
         opacity=0.8,
+        template=template_from_url(theme),
     )
     return fig

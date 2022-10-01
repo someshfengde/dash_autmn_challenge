@@ -32,7 +32,8 @@ app.layout = dbc.Container(
             ]
         ),
     ],
-    fluid=True,
+   fluid=True,
+    className="dbc",
 )
 
 if __name__ == "__main__":
